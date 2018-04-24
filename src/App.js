@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import routes from './routes';
+import Nav from './components/Nav/Nav';
 import './App.css';
+import { withRouter } from 'react-router-dom'
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+     
+<div className="App">
+      {this.props.location.pathname=='/' ?
+         
+          <div>
+      {routes}
       </div>
+      :
+      <div>
+      <Nav/> 
+      {routes}
+        </div>
+      
+      }
+     </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);
