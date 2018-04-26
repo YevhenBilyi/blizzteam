@@ -5,7 +5,9 @@ const passport=require('passport');
 const Auth0Strategy=require('passport-auth0');
 const massive=require('massive');
 const bodyParser=require('body-parser');
-const cors=require('cors')
+const cors=require('cors');
+const S3=require('./S3');
+const controller=require('./controller/controller');
 
 const app=express();
 
@@ -19,7 +21,7 @@ const {
     SESSION_SECRET
 }=process.env;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb'}));
 app.use(cors());
 
 massive(CONNECTION_STRING).then(db=>{
@@ -64,13 +66,14 @@ passport.serializeUser( (id, done)=>{
 
 passport.deserializeUser( (id, done)=>{
     app.get('db').find_session_user([id]).then(user=>{
+        console.log(user[0])
         done(null, user[0]);
     })
 })
 
 app.get('/auth', passport.authenticate('auth0'))
 app.get('/auth/callback', passport.authenticate('auth0',{
-    successRedirect: 'http://localhost:3000/#/private',
+    successRedirect: 'http://localhost:3000/#/profile',
     failureRedirect: 'http://localhost:3000'
 }))
 
@@ -80,7 +83,9 @@ app.get('/logout', function(req,res){
     res.redirect('http://localhost:3000')
 })
 
+app.put('/api/user', controller.updateUser)
 
+S3(app);
 
 
 app.listen(SERVER_PORT,()=>console.log('Listening on port:'+SERVER_PORT))

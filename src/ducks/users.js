@@ -1,20 +1,17 @@
 import axios from 'axios';
 
 const initialState={
-    user:{},
-    server:0,
-    battleTag:'',
-    mmr:0,
-    tier:''
+    user:{}
 }
 
 const GET_USER_INFO='GET_USER_INFO';
 const UPDATE_USER='UPDATE_USER';
 
-export function updateUser(battleTag, server, mmr, tier){
-    return {
+export function updateUser(battleTag, server, mmr, tier,hero){
+    axios.put('/api/user',{battleTag, server, mmr, tier,hero})
+            return {
         type:UPDATE_USER,
-        payload:{battleTag,server,mmr,tier }
+        payload:initialState.user 
     }
 }
 
@@ -32,8 +29,8 @@ export default function reducer(state=initialState, action){
         case GET_USER_INFO+'_FULFILLED':
         return Object.assign({}, state, {user:action.payload})
 
-        case UPDATE_USER:
-        return Object.assign({}, state, {battleTag:action.payload.battleTag, server:action.payload.server, mmr:action.payload.mmr,tier:action.payload.tier})
+        case UPDATE_USER+'_FULFILLED':
+        return Object.assign({}, state, {user:action.payload})
 
 
         default: 
