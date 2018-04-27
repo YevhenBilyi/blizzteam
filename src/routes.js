@@ -3,7 +3,7 @@ import {Switch, Route} from 'react-router-dom';
 import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';
 import Tier from './components/Tier/Tier';
-import Private from './components//Private/Private';
+import Private from './components/Private/Private'
 
 export default(
     <Switch>

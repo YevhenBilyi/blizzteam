@@ -9,7 +9,7 @@ class Tier extends Component {
       <div className="Tier">
         Tier
         <Users/>
-        <Tiermessages/>
+        <Tiermessages id={this.props.match.params.id}/>
       </div>
     );
   }

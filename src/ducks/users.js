@@ -1,11 +1,13 @@
 import axios from 'axios';
 
 const initialState={
-    user:{}
+    user:{},
+    allData:{}
 }
 
 const GET_USER_INFO='GET_USER_INFO';
 const UPDATE_USER='UPDATE_USER';
+const UPDATE_ALL_DATA='UPDATE_ALL_DATA';
 
 export function updateUser(battleTag, server, mmr, tier,hero){
     axios.put('/api/user',{battleTag, server, mmr, tier,hero})
@@ -15,6 +17,15 @@ export function updateUser(battleTag, server, mmr, tier,hero){
     }
 }
 
+export function getAllData(){
+    let allUserData=axios.get('/api/getalldata').then(res=>{
+        return res.data
+    })
+    return{
+        type:UPDATE_ALL_DATA,
+        payload:allUserData
+    }
+}
 export function getUser(){
     let userData=axios.get('/auth/me').then(res=>{
         return res.data
@@ -31,6 +42,10 @@ export default function reducer(state=initialState, action){
 
         case UPDATE_USER+'_FULFILLED':
         return Object.assign({}, state, {user:action.payload})
+
+        case UPDATE_ALL_DATA+'_FULFILLED':
+        return Object.assign({},state, {allData:action.payload})
+
 
 
         default: 

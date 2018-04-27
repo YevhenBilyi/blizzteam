@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Profile.css';
 import {connect} from 'react-redux';
-import {updateUser, getUser} from '../../ducks/users';
+import {updateUser, getUser, getAllData} from '../../ducks/users';
 import FileUpload from './FileUpload/FileUpload';
 import Mainlist from './Mainlist/Mainlist';
 import axios from 'axios';
@@ -21,6 +21,7 @@ class Profile extends Component {
     }
 componentDidMount(){
     this.props.getUser();
+    this.props.getAllData();
 }
 handleServer(e){
     this.setState({server:e})
@@ -56,6 +57,7 @@ getHero(e){
     this.setState({hero:e})
 }
   render() {
+      console.log(this.props.allData[0])
     return (
       <div className="Profile">
       <p> Your profile picture</p> <img src={this.props.user.profile_picture} alt="profile_pic"/>
@@ -90,4 +92,4 @@ function mapStateToProps(state){
     return state
 }
 
-export default connect(mapStateToProps, {updateUser, getUser})(Profile) ;
+export default connect(mapStateToProps, {updateUser, getUser, getAllData})(Profile) ;

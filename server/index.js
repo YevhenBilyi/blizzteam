@@ -8,6 +8,7 @@ const bodyParser=require('body-parser');
 const cors=require('cors');
 const S3=require('./S3');
 const controller=require('./controller/controller');
+const socket=require('socket.io')
 
 const app=express();
 
@@ -84,8 +85,26 @@ app.get('/logout', function(req,res){
 })
 
 app.put('/api/user', controller.updateUser)
+app.get('/api/getalldata', controller.getAllData)
 
 S3(app);
 
 
-app.listen(SERVER_PORT,()=>console.log('Listening on port:'+SERVER_PORT))
+const io=socket(app.listen(SERVER_PORT,()=>console.log('Listening on port:'+SERVER_PORT)));
+
+io.on('connection', socket => {
+    console.log('User Connected');
+    socket.on('join room', data => {
+      console.log('Room joined', data.room)
+      socket.join(data.room);
+      io.to(data.room).emit('room joined');
+    })
+    socket.on('message sent', data => {
+        console.log(data)
+      io.emit(`${data.room} dispatched`, data.message);
+    })
+  
+    socket.on('disconnect', () => {
+      console.log('User Disconnected');
+    })
+  });
