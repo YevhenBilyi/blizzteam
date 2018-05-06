@@ -8,8 +8,8 @@ class Private extends Component {
     return (
       <div className="Private">
         Private
-        <Channels/>
-        <Privatemessages/>
+        <Channels id={this.props.match.params.id}/>
+        <Privatemessages id={this.props.match.params.id}/>
       </div>
     );
   }

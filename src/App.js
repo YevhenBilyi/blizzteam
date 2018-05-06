@@ -9,8 +9,8 @@ class App extends Component {
     return (
      
 <div className="App">
-      {this.props.location.pathname=='/' ?
-         
+      {this.props.location.pathname==='/' ?
+
           <div>
       {routes}
       </div>

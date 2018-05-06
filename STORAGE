@@ -19,15 +19,13 @@ class Tiermessages extends Component {
       input: '',
       messages:[],
       room: this.props.id,
-      filterString:'',
-      channel_id,
-      filteredMessages:[]
+      filter:'',
+      channel_id
     }
 
     this.updateMessage = this.updateMessage.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.componentDidMount=this.componentDidMount.bind(this);
-    this.filterArray=this.filterArray.bind(this);
 
   }
   componentDidMount() {
@@ -57,6 +55,9 @@ class Tiermessages extends Component {
     input:''})
   })
 
+
+
+
   }
   sendMessage() {
 
@@ -72,23 +73,10 @@ class Tiermessages extends Component {
       message: this.state.input,
       room: this.state.room
     }) 
- })     
-}
-filterArray(){
-  if(this.state.filterString==='') alert("Please input beginning of battletag")
-  else{
-      let filterString=this.state.filterString;
-  console.log("My filtered string",filterString)
-  let filteredMessages=this.state.messages.filter(message=>message.battle_tag.split('').slice(0,filterString.split('').length).join('')==filterString).map((message,i)=>{
-    return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {message.message}</p></div>)
-  })
-  this.setState({filteredMessages,
-    filterString:''
-  })
-  console.log("Messages",filteredMessages)
-  }
 
-}
+    })     
+
+  }
 
 
   render() {
@@ -96,6 +84,7 @@ filterArray(){
     let messages=this.state.messages.map((message,i)=>{
       return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {message.message}</p></div>)
     })
+    // let filteredMessages=[];
 
     
 
@@ -105,28 +94,27 @@ filterArray(){
        
         {
             <div>
-                <h2>  
-
-                  {this.state.filteredMessages.length>0?
-                  this.state.filteredMessages:
-                  messages
-
-                  }
-                </h2>
+                <h2>  {messages}</h2>
                 {/* writing new message */}
               <input value={this.state.input} onChange={e => {
-                this.setState({input: e.target.value})}} />
-              
+                this.setState({
+                  input: e.target.value
+                })
+              }} />
               <button onClick={this.sendMessage}>Send</button>
               <p> Search it by battletag </p> 
-              {/*writing filter name string*/}
-              <input value={this.state.filterString} onChange={e=>{
-                this.setState({filterString:e.target.value })}} />
-              <button onClick={this.filterArray}> Search</button>
-              {/* deleting filtered array */}
+              {/* <input value={this.state.filter} onChange={e=>{
+                this.setState({
+                  filter:e.target.value
+                })
+              }} />
               <button onClick={()=>{
-                this.setState({filteredMessages:[]})
-              }}> Show all</button>
+                      filteredMessages=this.state.message.filter(message=>message.battle_tag.split('').slice(0,this.state.filter.split('').length).join('')==this.state.filter)
+                      .map((message,i)=>{
+                        return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {message.message}</p></div>)
+                      })
+                      console.log("Messages",filteredMessages)
+              }}> Search</button> */}
              
             </div>
       

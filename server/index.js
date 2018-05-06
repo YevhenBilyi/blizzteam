@@ -67,7 +67,7 @@ passport.serializeUser( (id, done)=>{
 
 passport.deserializeUser( (id, done)=>{
     app.get('db').find_session_user([id]).then(user=>{
-        console.log(user[0])
+        // console.log(user[0])
         done(null, user[0]);
     })
 })
@@ -86,6 +86,22 @@ app.get('/logout', function(req,res){
 
 app.put('/api/user', controller.updateUser)
 app.get('/api/getalldata', controller.getAllData)
+
+//getting all the users
+app.get('/api/users', controller.getAllUsers)
+
+//getting all the channels
+
+app.get('/api/channels', controller.getAllChannels)
+
+//creating new channel
+app.post('/api/channel', controller.createChannel)
+
+//storing the message
+app.post('/api/message',controller.storeMessage)
+app.get('/api/messages/:id', controller.getChannelMessages)
+
+
 
 S3(app);
 
