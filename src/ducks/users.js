@@ -12,6 +12,14 @@ const UPDATE_USER='UPDATE_USER';
 const UPDATE_ALL_DATA='UPDATE_ALL_DATA';
 const GET_ALL_USERS='GET_ALL_USERS';
 const GET_ALL_CHANNELS='GET_ALL_CHANNELS';
+const UPDATE_CHANNELS='UPDATE_CHANNELS';
+
+export function updateChannels(channels){
+    return {
+        type:UPDATE_CHANNELS,
+        payload:channels
+    }
+}
 
 export function getAllChannels(){
     let allChannels=axios.get('/api/channels').then(res=>{
@@ -74,6 +82,9 @@ export default function reducer(state=initialState, action){
         return Object.assign({}, state, {users:action.payload})
 
         case GET_ALL_CHANNELS+'_FULFILLED':
+        return Object.assign({}, state, {channels:action.payload})
+
+        case UPDATE_CHANNELS:
         return Object.assign({}, state, {channels:action.payload})
 
 

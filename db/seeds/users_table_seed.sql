@@ -6,5 +6,6 @@ battle_tag TEXT DEFAULT '',
 profile_picture TEXT DEFAULT '',
 mmr INTEGER ,
 tier TEXT DEFAULT '',
-hero TEXT DEFAULT ''
+hero TEXT DEFAULT '',
+online BOOLEAN DEFAULT false
 )

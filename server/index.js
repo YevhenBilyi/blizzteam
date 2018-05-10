@@ -9,9 +9,15 @@ const cors=require('cors');
 const S3=require('./S3');
 const controller=require('./controller/controller');
 const socket=require('socket.io')
+const cron=require('node-cron');
 
 const app=express();
 
+// deleting all the messages every day at midnight
+cron.schedule('0 0 * * *', function(){
+    const db=app.get('db');
+    db.delete_messages()
+  });
 const {
     SERVER_PORT,
     CONNECTION_STRING,
@@ -19,13 +25,18 @@ const {
     CLIENT_ID,
     CLIENT_SECRET,
     CALLBACK_URL,
-    SESSION_SECRET
+    SESSION_SECRET,
+    SUCCESS_REDIRECT,
+    FAILURE_REDIRECT
 }=process.env;
+
+app.use( express.static( `${__dirname}/../build` ) );
 
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(cors());
 
 massive(CONNECTION_STRING).then(db=>{
+    console.log("Massive up and running")
     app.set('db', db)
 })
 app.use(session({
@@ -50,9 +61,11 @@ passport.use(new Auth0Strategy({
     const {picture,id}=profile
     db.find_user([ id]).then( users=>{
         if(users[0]){
+            db.update_status_user([true, users[0].id])
             return done(null, users[0].id)
         } else {
             db.create_user([picture,id]).then(createdUser=>{
+                db.update_status_user([true, createdUser[0].id])
                 return done(null, createdUser[0].id)
             })
         }
@@ -74,14 +87,18 @@ passport.deserializeUser( (id, done)=>{
 
 app.get('/auth', passport.authenticate('auth0'))
 app.get('/auth/callback', passport.authenticate('auth0',{
-    successRedirect: 'http://localhost:3000/#/profile',
-    failureRedirect: 'http://localhost:3000'
+    successRedirect: SUCCESS_REDIRECT,
+    failureRedirect: FAILURE_REDIRECT
 }))
 
 app.get('/auth/me', (req,res)=>req.user ? res.status(200).send(req.user): res.status(401).send('Nice try sucka'))
 app.get('/logout', function(req,res){
+    app.get('db').update_status_user([false,req.user.id]).then(()=>{
     req.logOut();
-    res.redirect('http://localhost:3000')
+    res.redirect(FAILURE_REDIRECT)
+    })
+    
+
 })
 
 app.put('/api/user', controller.updateUser)
@@ -101,6 +118,12 @@ app.post('/api/channel', controller.createChannel)
 app.post('/api/message',controller.storeMessage)
 app.get('/api/messages/:id', controller.getChannelMessages)
 
+//liking/ disliking messages
+app.put('/api/like', controller.likeMessage)
+
+//adding/deleting user to channel
+app.put('/api/channels/add', controller.putUserToChannel)
+app.put('/api/channels/remove', controller.removeUserFromChannel)
 
 
 S3(app);

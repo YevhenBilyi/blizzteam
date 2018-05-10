@@ -1,130 +1,94 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
-import './Tiermessages.css';
+import './Channels.css';
 import {connect} from 'react-redux';
-import axios from 'axios';
+import {Link} from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
-class Tiermessages extends Component {
-  constructor(props) {
-    super(props);
-    // assigning channel_id number based on url to not take it from user.server_num
-    let channel_id=0;
-    if(this.props.id=='Bronze') channel_id=1
-    else if(this.props.id=='Silver') channel_id=2
-    else if(this.props.id=='Gold') channel_id=3
-    else if(this.props.id=='Platinum') channel_id=4
-    else if(this.props.id=='Diamond') channel_id=5 
-    else channel_id=6
-    this.state = {
-      input: '',
-      messages:[],
-      room: this.props.id,
-      filter:'',
-      channel_id
+class Channels extends Component {
+  constructor(){
+    super();
+    this.state={
+      search:'',
+      filteredChats:[]
     }
-
-    this.updateMessage = this.updateMessage.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.componentDidMount=this.componentDidMount.bind(this);
-
+  
+  this.searchRoom=this.searchRoom.bind(this);
   }
-  componentDidMount() {
-
-    //getting messages that will show when you just came to page
-    axios.get(`/api/messages/${this.state.channel_id}`).then(res=>{
-      this.setState({
-    messages: res.data})
-  })
-// socket stuff
-    this.socket = io();
-    this.socket.on(`${this.state.room} dispatched`, data => {
-      console.log(data)
-      this.updateMessage(data);
-    })
-    this.socket.on('room joined', data => {
-      this.joinSuccess()
-    })
-    
-  }
-  updateMessage(message) {
-
-    //refreshing list of message from db
-  axios.get(`/api/messages/${this.state.channel_id}`).then(res=>{
-      this.setState({
-    messages: res.data,
-    input:''})
-  })
-
-
-
-
-  }
-  sendMessage() {
-
-    //getting the time
-    var today = new Date();
-    var message_time = ((today.getHours() < 10)?"0":"") +today.getHours()+ ":" + ((today.getMinutes() < 10)?"0":"")+today.getMinutes() + ":" + ((today.getSeconds() < 10)?"0":"")+today.getSeconds();
-
-    let channel_id=this.state.channel_id
-    let message=this.state.input
-    // posting message to my db
-    axios.post('/api/message', {message,message_time,channel_id}).then(res=>{
-         this.socket.emit('message sent', {
-      message: this.state.input,
-      room: this.state.room
-    }) 
-
-    })     
-
-  }
-
-
-  render() {
-    //creating message list by mapping thru messages
-    let messages=this.state.messages.map((message,i)=>{
-      return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {message.message}</p></div>)
-    })
-    // let filteredMessages=[];
-
-    
-
-    return (
-      <div className="App">
-     <h1>My Room: {this.state.room}</h1> 
-       
-        {
-            <div>
-                <h2>  {messages}</h2>
-                {/* writing new message */}
-              <input value={this.state.input} onChange={e => {
-                this.setState({
-                  input: e.target.value
-                })
-              }} />
-              <button onClick={this.sendMessage}>Send</button>
-              <p> Search it by battletag </p> 
-              {/* <input value={this.state.filter} onChange={e=>{
-                this.setState({
-                  filter:e.target.value
-                })
-              }} />
-              <button onClick={()=>{
-                      filteredMessages=this.state.message.filter(message=>message.battle_tag.split('').slice(0,this.state.filter.split('').length).join('')==this.state.filter)
-                      .map((message,i)=>{
-                        return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {message.message}</p></div>)
-                      })
-                      console.log("Messages",filteredMessages)
-              }}> Search</button> */}
-             
-            </div>
-      
+  searchRoom(){
+    let {user, users, channels}=this.props;
+    if(this.state.search==='') alert("Please input beginning of battletag")
+    else{
+        let counter=0;
+        let counter2=0;
+        let search=this.state.search;
+        
+    console.log("My filtered string",search)
+    //finding only channels with this player that not tier rooms
+    let filteredChats=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
+    .map((channel, i)=>{
+      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
+      console.log("USERSNUM IS", usersNum)
+      var usersNames=users.filter(thisUser=>usersNum.includes(thisUser.id)).map((thisUser,j)=>{
+        //checking if this channel have right player(if it is then counter>0)
+        if(thisUser.battle_tag.split('').slice(0,search.split('').length).join('')==search) ++counter;
+        return (<p key={j}>{thisUser.battle_tag}</p>)});
+        if(counter>0){
+          counter=0;
+          counter2++;
+          console.log("SECOND COUNTER",counter2)
+          //showing only right channels, if there's atleast one then counter2>0
+    return (<div key={i}> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button>{usersNames}</button></Link> </div>)      
         }
+      
+    }).filter(e=>e!=undefined)
+    //if there's no such rooms it'll show all rooms
+    if(counter2==0) filteredChats=[];
+    
+    this.setState({filteredChats,
+      search:''
+    })
+    }
+  
+  }
+  render() {
+    console.log("MY USER IS===>",this.props.user, this.props.users, this.props.channels)
+    let {user, users, channels}=this.props;
+
+    //finding only channels with this player that not tier rooms    
+    let channelList=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
+    .map((channel, i)=>{
+      console.log("MAIN USER ID---->",user.id)
+      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
+      console.log("usersNum is!",usersNum)
+      var usersNames=users.filter(user=> usersNum.includes(user.id)).map(user=><p>{user.battle_tag}</p>);
+      return (<div key={i}> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button >{usersNames}</button></Link></div>)
+    })
+    return (
+      <div className="Channels">
+      <p> CHAT LIST </p>
+        {this.state.filteredChats.length>0?
+        this.state.filteredChats:
+          
+          
+          channelList} 
+
+      <p> Search by battleTag</p>
+
+      <input value={this.state.search} onChange={e=>{
+        this.setState({search:e.target.value})}}/>
+      <button onClick={this.searchRoom}>Search</button>
+
+      <button onClick={()=>{this.setState({filteredChats:[]})}}>Show all</button>
       </div>
     );
   }
 }
 
 function mapStateToProps(state){
-  return state
+  return {
+    user:state.user,
+    users:state.users,
+    channels:state.channels
+  }
 }
-export default connect(mapStateToProps)(Tiermessages) ;
+export default connect(mapStateToProps)(withRouter(Channels)) ;

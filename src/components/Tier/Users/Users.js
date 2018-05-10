@@ -3,6 +3,7 @@ import './Users.css';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
+import {updateChannels} from '../../../ducks/users';
 
 class Users extends Component {
   constructor(props){
@@ -32,15 +33,15 @@ class Users extends Component {
      //if you and user don't have any common channel it's creating one and giving you link to it      
             if(counter===0){
             axios.post('/api/channel', {user1:user.id, user2:e.id}).then(res=>{
-            
-              this.props.history.push(`/private/${res.data[0].id}`)
+            this.props.updateChannels(res.data);
+              this.props.history.push(`/private/${res.data[res.data.length-1].id}`)
               console.log("RES.DATA",res.data[0].id)
         })
         
       } 
       }}
       
-      >  {e.battle_tag} {e.mmr}  </button> 
+      >  {e.battle_tag} {e.mmr} {e.online? <p>online</p>: <p>offline</p>}  </button> 
 
 
  
@@ -63,4 +64,4 @@ function mapStateToProps(state){
     channels:state.channels
   }
 }
-export default connect(mapStateToProps)(withRouter(Users)) ;
+export default connect(mapStateToProps,{updateChannels})(withRouter(Users)) ;
