@@ -3,7 +3,7 @@ import './Channels.css';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import Test from './Test/Test';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 class Channels extends Component {
   constructor(){
@@ -30,11 +30,11 @@ class Channels extends Component {
     //finding only channels with this player that not tier rooms
     let filteredChats=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
     .map((channel, i)=>{
-      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
+      var usersNum=channel.allowed_users.filter(number=>number!==user.id);
       console.log("USERSNUM IS", usersNum)
       var usersNames=users.filter(thisUser=>usersNum.includes(thisUser.id)).map((thisUser,j)=>{
         //checking if this channel have right player(if it is then counter>0)
-        if(thisUser.battle_tag.split('').slice(0,search.split('').length).join('')==search) ++counter;
+        if(thisUser.battle_tag.split('').slice(0,search.split('').length).join('')===search) ++counter;
         return (<p key={j}>{thisUser.battle_tag}</p>)});
         if(counter>0){
           counter=0;
@@ -44,9 +44,9 @@ class Channels extends Component {
     return (<div key={i}><div> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button>{usersNames}</button></Link></div><Test channelID={channel.id} usersNum={usersNum}/> </div>)      
         }
       
-    }).filter(e=>e!=undefined)
+    }).filter(e=>e!==undefined)
     //if there's no such rooms it'll show all rooms
-    if(counter2==0) filteredChats=[];
+    if(counter2===0) filteredChats=[];
     
     this.setState({filteredChats,
       search:''
@@ -63,30 +63,31 @@ class Channels extends Component {
     let channelList=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
     .map((channel, i)=>{
       console.log("MAIN USER ID---->",user.id)
-      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
+      var usersNum=channel.allowed_users.filter(number=>number!==user.id);
       console.log("usersNum is!",usersNum)
       var usersNames=users.filter(user=> usersNum.includes(user.id)).map(user=><p>{user.battle_tag}</p>);
-      return (<div key={i}><div> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button >{usersNames}</button></Link></div><Test channelID={channel.id} usersNum={usersNum}/></div>)
+      return (<div className='elementchat' key={i}><div id='chatnamebutton'> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button >{usersNames}</button></Link></div><div className='testbutton'><Test channelID={channel.id} usersNum={usersNum}/></div></div>)
     })
     return (
       <div className="Channels">
-      <p> CHAT LIST </p>
-        <MuiThemeProvider >
+      <div id='privateheader'> CHAT LIST </div>
+        <div id='chatlist'>
         {this.state.filteredChats.length>0?
         this.state.filteredChats:
-          
-          
           channelList} 
+          </div>
         
             
-        </MuiThemeProvider>
+       
       <p> Search by battleTag</p>
-
+      <div id='privateinput'>
       <input value={this.state.search} onChange={e=>{
         this.setState({search:e.target.value})}}/>
-      <button onClick={this.searchRoom}>Search</button>
-
-      <button onClick={()=>{this.setState({filteredChats:[]})}}>Show all</button>
+        </div>
+      <button onClick={this.searchRoom}>SEARCH</button>
+      <div id='lastbutton'>
+      <button onClick={()=>{this.setState({filteredChats:[]})}}>SHOW ALL</button>
+      </div>
       </div>
     );
   }

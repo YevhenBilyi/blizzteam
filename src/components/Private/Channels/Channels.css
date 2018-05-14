@@ -1,0 +1,74 @@
+#privateheader{
+    color: #fff;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 12px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8), 0 6px 24px rgba(0, 0, 0, .6);
+    font-family: 'Anton', sans-serif;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+#chatnamebutton button{
+    height: fit-content;
+}
+.Channels button{
+    
+    height: 27px;
+    width: 201px;
+    display: block;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,51,.4);
+    transition: color .2s;
+    
+    background: linear-gradient(to bottom, #490095, #030099);
+    border:#853bcf  2px solid;
+    margin: auto;
+    margin-bottom: 20px;
+    box-shadow: 1px 0 4px rgba(102, 48, 20, 0.24), 6px 0 24px rgba(0, 0, 0, 0.36);
+   
+}
+.Channels button:hover{
+    outline: none;
+    background: linear-gradient(to bottom, #5e00c5, #0500cc);
+}
+.Channels a{
+    text-decoration: none;
+}
+#chatlist{
+    height: 50vh;
+    overflow: scroll;
+}
+.elementchat{
+    margin-top: 20px;
+}
+#privateinput {
+    margin: 20px 0;
+}
+#privateinput input{
+width: 201px;
+background-image: linear-gradient(to right,#039,#309)!important;
+border: 1px solid #260d54;
+color: #ccf;
+font-family: Helvetica, Arial, sans-serif;
+clear: both;
+overflow: hidden;
+white-space: nowrap;
+height: 25px;
+font-size: 15px;
+}
+#privateinput input:focus{
+    outline: none;
+}
+#lastbutton button{
+    border: #fca52c 2px solid;
+    background: linear-gradient(to bottom,#ff9f19,#ff6619);
+}
+#lastbutton button:hover{
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);   
+}
+@media(min-width:601px){
+    .Channels{
+        margin-left: 60px;
+    }
+}

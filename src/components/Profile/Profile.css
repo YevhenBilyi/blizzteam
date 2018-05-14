@@ -1,0 +1,180 @@
+button:hover{
+    cursor: pointer;
+}
+select:hover{
+    cursor: pointer;
+}
+.Profile{
+   
+   background: url("../../img/profile_background.png")center,no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 93vh;
+    
+    /* display: flex;
+    flex-flow: column; */
+    color: #ccf;
+    text-shadow:0 0 6px #99f;
+    font-family: Helvetica, Arial, sans-serif;
+    overflow: none;
+    
+  
+}
+
+#info{
+    height: 42%;
+    width: 100%;
+}
+#first img{
+    height: 150px;
+    left: 0;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+#first{
+    display: flex;
+    flex-flow: row;
+    align-content: center;
+    background: url("../../img/nav-top-pattern.png"),rgba(0,0,0,0);
+    background-repeat: repeat-x;
+}
+#battleTag{
+    padding-top: 50px;
+    color: white;
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+#second{
+    padding-top: 20px;
+    display: flex;
+    flex-flow: row;
+    letter-spacing: 2px;
+}
+#main p{
+    padding-bottom: 25px;
+    padding-left: 50px
+    
+}
+#second img{
+    height: 70px;
+    padding-right: 30px;
+}
+#second p{
+    padding-right: 50px;
+}
+.hline-bottom {
+    padding-bottom: 10px;
+    border-bottom: 2px solid; /* whichever color you prefer */
+    border-image: linear-gradient(to right,#295fcc,#7a7acc) 100% 2;
+}
+#update div{
+    padding-top: 5px;
+    letter-spacing: 2px;
+}
+#update select{
+    color: #ccf;
+    text-shadow:0 0 6px #99f;
+    font-family: Helvetica, Arial, sans-serif;
+    background-image: linear-gradient(to right,#039,#309)!important;
+}
+
+#update select:focus{
+    outline: none;
+}
+#update input{
+    color: #ccf;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: rgba(13,1,25,.7);
+    border: 1px solid #260d54;
+    
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8), 0 6px 24px rgba(0, 0, 0, .6);
+}
+#update input:focus{
+    outline: none;
+}
+@media(min-width:601px){
+
+    .Profile{
+        display: flex;
+        flex-direction: row;
+    }
+    #update{
+        background: url("../../img/nav-top-pattern.png"),rgba(0,0,0,0);
+        background-repeat: repeat-x;
+    }
+    #first img{
+        height: 350px;
+        padding: 30px;
+        padding-bottom: 0;
+        padding-left: 20px;
+        padding-right: 0;
+    }
+    #battleTag{
+        padding-top: 50px;
+        color: white;
+        font-size: 28px;
+        letter-spacing: 7px;
+    }
+    #second{
+        padding: 10px;
+        flex-flow: row;
+        align-items: flex-start;
+        letter-spacing: 5px;
+        padding-left: 20px;
+        padding-right:0;
+    }
+    #main{
+        padding-top: 20px;
+        padding-left: 10px;
+        text-align: left;
+    }
+
+    #main p{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    #second img{
+        height: 130px;
+        padding-top: 60px;
+        padding-bottom: 20px;
+        padding-right: 90px;
+        padding-left: 0;
+    }
+    #tierimg img{
+        height: 123px;
+    }
+    #info{
+        height: 100%;
+        width: 50%;
+    }
+    #update{
+        width: 50%;
+        height: 100%;
+    }
+    .hline-bottom{
+        display: none;
+    }
+    #update div{
+        padding-top: 20px;
+        letter-spacing: 4px;
+        font-size: 24px;
+    }
+    #update input{
+        margin-top: 10px;
+        height: 30px;
+        width: 200px;
+        font-size: 20px
+    }
+    #update{
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+    }
+    #update select{
+        height: 25px;
+        margin-top: 10px;
+    }
+
+}
+
+

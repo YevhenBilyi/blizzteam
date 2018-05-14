@@ -1,0 +1,37 @@
+.Test button{
+    
+    color: white;
+    text-shadow:0 1px 4px rgba(0,0,51,.4);
+     transition: color .2s;
+     background: linear-gradient(to bottom,#ff9f19,#ff6619);
+     border: #fca52c 2px solid;
+}
+.Test button:hover{
+    outline: none;
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);  
+}
+.insidebutton{
+    text-shadow:0 0 6px #99f;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.insidebutton button{
+      
+    color: white;
+    text-shadow:0 1px 4px rgba(0,0,51,.4);
+     transition: color .2s;
+     background: linear-gradient(to bottom,#ff9f19,#ff6619);
+     border: #fca52c 2px solid; 
+}
+.insidebutton button:hover{
+    outline: none;
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);  
+}
+
+.purple button{
+    background: linear-gradient(to bottom, #490095, #030099);
+    border:#853bcf  2px solid;
+}
+.purple button:hover{
+    outline: none;
+    background: linear-gradient(to bottom, #5e00c5, #0500cc);
+}

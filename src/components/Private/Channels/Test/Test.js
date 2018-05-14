@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import {updateChannels} from '../../../../ducks/users';
+import './Test.css'
 
 class Test extends Component {
     constructor(){
@@ -59,20 +60,21 @@ render() {
         let {channelID, usersNum, users}=this.props
         let userList=users.map((user,i)=>{
             if(user.id===this.props.user.id){
-                return <p key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.leaveChannel(user.id,channelID)}>Leave</button></p> 
+                return <div className='insidebutton purple' key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.leaveChannel(user.id,channelID)}>Leave</button></div> 
             }
             else if(usersNum.includes(user.id)){
-                return <p key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.removeFromChannel(user.id,channelID)}>Remove</button></p>
+                return <div className='insidebutton' key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.removeFromChannel(user.id,channelID)}>Remove</button></div>
             }
             else{
-                return <p key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.addToChannel(user.id, channelID)}>Add</button></p>
+                return <div className='insidebutton' key={i}>{user.battle_tag} {user.tier} <button onClick={()=>this.addToChannel(user.id, channelID)}>Add</button></div>
             }
         })
+        let style={ width:'201px', height:'27px'}
     return (
       <div className="Test">
-        <RaisedButton label="Dialog" onClick={this.handleOpen} />
-        <Dialog
-          title="Dialog With Actions"
+        <RaisedButton style={style} label="ADD/REMOVE" onClick={this.handleOpen} />
+        <Dialog 
+          title="Choose one"
           actions={actions}
           modal={false}
           open={this.state.open}

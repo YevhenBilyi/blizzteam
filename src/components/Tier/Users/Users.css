@@ -1,0 +1,43 @@
+.Users button{
+    height: 47px;
+    width: 320px;
+    transition: all 500ms ease;
+    transition-property: all;
+    transition-duration: 500ms;
+    transition-timing-function: ease;
+    transition-delay: initial;
+    background: linear-gradient(to bottom, #ff9f19, #ff6619);
+   
+    color: white;
+    border: #fca52c 2px solid;
+    text-shadow: 0 1px 4px rgba(0, 0, 51, 0.4);
+    font-size: 20px;
+    font-weight: 600;
+    transition: all 500ms ease;
+    text-align: center;
+    font-size: .8888rem;
+    margin:20px 0;
+
+}
+.Users button:hover{
+     background: linear-gradient(to bottom,#ffb252,#ff8c52);
+}
+.Users{
+    height: 93%;
+    overflow: scroll;
+}
+i {
+    border: solid #ccf;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+@media(min-width:601px){
+.Users{
+    width: 30vw;
+}
+}

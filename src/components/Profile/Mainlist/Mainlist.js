@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Mainlist.css';
 
 
 class Mainlist extends Component {
@@ -12,7 +13,7 @@ class Mainlist extends Component {
     }
 filterFunction(e){
     
-    let temp=this.state.list.sort().filter(word=>word.split('').slice(0,e.split('').length).join('')==e)
+    let temp=this.state.list.sort().filter(word=>word.split('').slice(0,e.split('').length).join('')===e)
     this.setState({filteredList: temp})
 }
 handleName(e){
@@ -27,14 +28,14 @@ handleName(e){
           </option>);
       })
     return (
-      <div className="Nav">
+      <div id="mainlist">
 
         <p>Choose your main:</p>
         <input placeholder='hero name'  type='text' onChange={e=>this.filterFunction(e.target.value)}/>
         <select onBlur={e=> this.handleName(e.target.value)}>
           {filtered}
         </select> 
-        <button onClick={()=>this.props.saveChanges(this.state.filteredList)}> Save </button>
+        <button onClick={()=>this.props.saveChanges(this.state.filteredList)}> SAVE </button>
       </div>
     );
   }

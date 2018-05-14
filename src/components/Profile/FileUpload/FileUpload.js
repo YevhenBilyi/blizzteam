@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import axios from 'axios'
+import React, { Component } from 'react';
+import axios from 'axios';
+import './FileUpload.css'
 
 function sendToback(photo){
     console.log(photo)
@@ -46,11 +47,12 @@ export default class FileUpload extends Component {
     render(){
         this.state.file && console.log(this.state.photo)
         return (
-            <div className="FileUpload">
+            <div id="FileUpload">
                 <input type="file" onChange={this.handlePhoto}/>
                 <br/>
 
-                <button onClick={this.sendPhoto}>Upload</button>
+                <button onClick={this.sendPhoto}>UPDATE</button>
+                
             </div>
         )
     }

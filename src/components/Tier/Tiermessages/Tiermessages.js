@@ -3,21 +3,24 @@ import io from 'socket.io-client';
 import './Tiermessages.css';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import Emoji from 'react-emoji-render';
 import MyEmojiInput from './Emojilist/MyEmojiInput';
-import {emojify} from 'react-emojione';
+import ContentEditable from 'react-contenteditable';
+import thumbup from '../../../img/thumbup.png';
+import thumbdown from '../../../img/thumb_down.png';
+import smile from '../../../img/smile.png';
+
 
 class Tiermessages extends Component {
   constructor(props) {
     super(props);
     // assigning channel_id number based on url to not take it from user.server_num
     let channel_id=0;
-    if(this.props.id=='Bronze') channel_id=1
-    else if(this.props.id=='Silver') channel_id=2
-    else if(this.props.id=='Gold') channel_id=3
-    else if(this.props.id=='Platinum') channel_id=4
-    else if(this.props.id=='Diamond') channel_id=5 
-    else channel_id=6
+    if(this.props.id==='Bronze')channel_id=1;
+    else if(this.props.id==='Silver')channel_id=2;
+    else if(this.props.id==='Gold')channel_id=3;
+    else if(this.props.id==='Platinum')channel_id=4;
+    else if(this.props.id==='Diamond')channel_id=5 ;
+    else channel_id=6;
     this.state = {
       input: ``,
       messages:[],
@@ -34,6 +37,7 @@ class Tiermessages extends Component {
     this.filterArray=this.filterArray.bind(this);
     this.openWindow=this.openWindow.bind(this);
     this.addEmoji=this.addEmoji.bind(this);
+    this.scrollToBottom=this.scrollToBottom.bind(this);
 
   }
   componentDidMount() {
@@ -42,6 +46,7 @@ class Tiermessages extends Component {
     axios.get(`/api/messages/${this.state.channel_id}`).then(res=>{
       this.setState({
     messages: res.data})
+    setTimeout(this.scrollToBottom, 1000)
   })
 // socket stuff
     this.socket = io();
@@ -55,13 +60,13 @@ class Tiermessages extends Component {
     
   }
   updateMessage(message) {
-
-    //refreshing list of message from db
-  axios.get(`/api/messages/${this.state.channel_id}`).then(res=>{
       this.setState({
-    messages: res.data,
+    messages: message,
     input:''})
-  })
+    setTimeout(this.scrollToBottom, 1000)
+
+
+  
 
   }
   sendMessage() {
@@ -69,23 +74,26 @@ class Tiermessages extends Component {
     //getting the time
     var today = new Date();
     var message_time = ((today.getHours() < 10)?"0":"") +today.getHours()+ ":" + ((today.getMinutes() < 10)?"0":"")+today.getMinutes() + ":" + ((today.getSeconds() < 10)?"0":"")+today.getSeconds();
-
     let channel_id=this.state.channel_id
     let message=this.state.input
     // posting message to my db
     axios.post('/api/message', {message,message_time,channel_id}).then(res=>{
          this.socket.emit('message sent', {
-      message: this.state.input,
+      message: res.data,
       room: this.state.room
     }) 
  })     
 }
 filterArray(){
+  var style2={  height:"100%",wordWrap:"break-word",padding:"3px"}
   if(this.state.filterString==='') alert("Please input beginning of battletag")
   else{
       let filterString=this.state.filterString;
-  let filteredMessages=this.state.messages.filter(message=>message.battle_tag.split('').slice(0,filterString.split('').length).join('')==filterString).map((message,i)=>{
-    return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {emojify(message.message)}</p></div>)
+  let filteredMessages=this.state.messages.filter(message=>message.battle_tag.split('').slice(0,filterString.split('').length).join('')===filterString).map((message,i)=>{
+    return (<div><div className="wholemessage"  key={i}><div className="mainmain"><img src={message.hero} alt=""/></div> <div className="insidemessage">
+     <div className="userinfo"> {message.mmr===0?'':message.mmr}  {message.battle_tag} {message.message_time} </div> <div className="contentSuka">    <ContentEditable style={style2}
+    html={message.message} 
+    disabled={true}/></div></div></div></div>)
   })
   this.setState({filteredMessages,
     filterString:''
@@ -97,18 +105,28 @@ openWindow(){
 
   this.state.emoji?this.setState({emoji:false}):this.setState({emoji:true})
 }
-addEmoji(e){
-  var input=this.state.input+":"+e+":"
-this.setState({input})
+addEmoji(emo){
+  var input=this.state.input.split('<span>').join('').split('</span>').join('')
+  input=`<span>${input}<img src=${emo} class="emoji" data-codepoints="1f605" height="20px" width="20px" /></span>`;
+   
+   
+   this.setState({input})
 
 }
-
+scrollToBottom() {
+  if(this.el!==null)this.el.scrollIntoView({ behavior: "smooth" });
+  
+}
 
   render() {
-   console.log("EMO IS",this.state.emo)
+    var style2={  height:"100%",wordWrap:"break-word",padding:"3px"}
     //creating message list by mapping thru messages
     let messages=this.state.messages.map((message,i)=>{
-    return (<div key={i}><img src={message.hero} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}: {emojify(message.message)}</p> {/*LIKE BUTTON*/}<button onClick={()=>{
+    return (<div className="wholewhole"key={i}><div className="wholemessage"  ><div className="mainmain"><img src={message.hero} alt=""/></div> <div className="insidemessage">
+    <div className="userinfo"> {message.mmr===0?'':message.mmr}  {message.battle_tag} {message.message_time} </div>
+    <div className="contentSuka"><ContentEditable style={style2}
+    html={message.message} 
+    disabled={true}/></div>{/*LIKE BUTTON*/}<div className="like imgbutton"><button onClick={()=>{
         let action="like"
         let number=message.like+1;
         let{user_id, message_time}=message;
@@ -116,12 +134,12 @@ this.setState({input})
         axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
 
           this.socket.emit('message sent', {
-            message: this.state.input,
+            message: res.data,
             room: this.state.room
           }) 
         })
       
-      }}><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/114472-200.png" alt="fire" height="20px" width="20px"/>
+      }}><img src={thumbup} alt="thumbup" height="20px" width="20px"/>
       </button>{message.like} {/*DISLIKE BUTTON*/}<button onClick={()=>{
         let action="dislike"
         let number=message.dislike+1;
@@ -130,54 +148,71 @@ this.setState({input})
         axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
 
           this.socket.emit('message sent', {
-            message: this.state.input,
+            message: res.data,
             room: this.state.room
           })
         })
-      }}><img src="https://cdn0.iconfinder.com/data/icons/thin-voting-awards/24/thin-0664_dislike_thumb_down_vote-512.png" alt="fire" height="20px" width="20px"/>
-      </button>{message.dislike}</div>)
+      }}><img src={thumbdown} alt="thumbdown" height="20px" width="20px"/>
+      </button>{message.dislike}</div></div></div></div>)
     })
 
     
-
+var style={ wordWrap:"break-word"}
     return (
-      <div className="App">
+      <div className="Tiermessages">
       
-     <h1>My Room: {this.state.room}</h1> 
         {
-            <div>
-                <h2>  
-
+            <div >
+              
+            <div id="tierchat">
                   {this.state.filteredMessages.length>0?
                   this.state.filteredMessages:
                   messages
-
                   }
-                </h2>
+                  <div ref={(el) => { this.el = el; }}></div>
+              </div>
+            
                 {/* writing new message */}
-              <input value={this.state.input} onChange={e => {
-                this.setState({input: e.target.value})}} />
+                <div className="inputline" >
+                <div className="contenteditable">
+                <ContentEditable 
+              html={this.state.input} // innerHTML of the editable div
+              disabled={false}       // use true to disable edition
+              onChange={this.handleChange=(e)=>{this.setState({input:e.target.value})}} // handle innerHTML change
+              />
+              </div>
 
-
-                <button onClick={this.openWindow}>emoji</button>
-                
+                  <div className="imgbutton">
+                <button onClick={this.openWindow}><img src={smile} alt="smile"height="20px" width="20px" /></button>
+                </div>
+                <div className="sendbutton">
+                <button onClick={this.sendMessage}>Send</button></div>
+                </div>
                 {/* Checking if somebody press emoji button and open menu */}
+                
                 {this.state.emoji?
-                <MyEmojiInput addEmoji={this.addEmoji}/>:
+                <div id='emojipicker'><MyEmojiInput addEmoji={this.addEmoji}/></div>:
                 <p></p>
               }
+              
                 
               
-              <button onClick={this.sendMessage}>Send</button>
-              <p> Search it by battletag </p> 
+              
               {/*writing filter name string*/}
-              <input value={this.state.filterString} onChange={e=>{
+              <div className="inputline inputline2">
+              
+              <input placeholder="Search by battletag" value={this.state.filterString} onChange={e=>{
                 this.setState({filterString:e.target.value })}} />
-              <button onClick={this.filterArray}> Search</button>
+                <div id="filterbutton">
+              <button onClick={this.filterArray}> SEARCH</button>
+              </div>
               {/* deleting filtered array */}
+              <div id="resetbutton">
               <button onClick={()=>{
                 this.setState({filteredMessages:[]})
-              }}> Show all</button>
+              }}> RESET</button>
+              </div>
+              </div>
              
             </div>
       

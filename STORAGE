@@ -1,94 +1,163 @@
 import React, { Component } from 'react';
-import './Channels.css';
+import io from 'socket.io-client';
+import './Privatemessages.css';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import { withRouter } from "react-router-dom";
+import axios from 'axios';
+import MyEmojiInput2 from './MyEmojiInput2/MyEmojiInput2';
+import ContentEditable from 'react-contenteditable';
 
-class Channels extends Component {
-  constructor(){
-    super();
-    this.state={
-      search:'',
-      filteredChats:[]
+class Privatemessages extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      input: '',
+      messages:[],
+      room: this.props.id,
+      filterString:'',
+      filteredMessages:[],
+      emoji:false
     }
-  
-  this.searchRoom=this.searchRoom.bind(this);
+
+    this.updateMessage = this.updateMessage.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.componentDidMount=this.componentDidMount.bind(this);
+    this.openWindow=this.openWindow.bind(this);
+    this.addEmoji=this.addEmoji.bind(this)
+
   }
-  searchRoom(){
-    let {user, users, channels}=this.props;
-    if(this.state.search==='') alert("Please input beginning of battletag")
-    else{
-        let counter=0;
-        let counter2=0;
-        let search=this.state.search;
-        
-    console.log("My filtered string",search)
-    //finding only channels with this player that not tier rooms
-    let filteredChats=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
-    .map((channel, i)=>{
-      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
-      console.log("USERSNUM IS", usersNum)
-      var usersNames=users.filter(thisUser=>usersNum.includes(thisUser.id)).map((thisUser,j)=>{
-        //checking if this channel have right player(if it is then counter>0)
-        if(thisUser.battle_tag.split('').slice(0,search.split('').length).join('')==search) ++counter;
-        return (<p key={j}>{thisUser.battle_tag}</p>)});
-        if(counter>0){
-          counter=0;
-          counter2++;
-          console.log("SECOND COUNTER",counter2)
-          //showing only right channels, if there's atleast one then counter2>0
-    return (<div key={i}> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button>{usersNames}</button></Link> </div>)      
-        }
-      
-    }).filter(e=>e!=undefined)
-    //if there's no such rooms it'll show all rooms
-    if(counter2==0) filteredChats=[];
+  componentDidMount() {
+
+    //getting messages that will show when you just came to page
+    axios.get(`/api/messages/${this.state.room}`).then(res=>{
+      this.setState({
+    messages: res.data})
+  })
+// socket stuff
+    this.socket = io();
+    this.socket.on(`${this.state.room} dispatched`, data => {
+      console.log(data)
+      this.updateMessage(data);
+    })
+    this.socket.on('room joined', data => {
+      this.joinSuccess()
+    })
     
-    this.setState({filteredChats,
-      search:''
-    })
-    }
-  
   }
+  updateMessage(message) {
+
+    //refreshing list of message from db
+  axios.get(`/api/messages/${this.state.room}`).then(res=>{
+      this.setState({
+    messages: res.data,
+    input:'',
+    input2:''})
+  })
+
+  }
+  sendMessage() {
+
+    //getting the time
+    var today = new Date();
+    var message_time = ((today.getHours() < 10)?"0":"") +today.getHours()+ ":" + ((today.getMinutes() < 10)?"0":"")+today.getMinutes() + ":" + ((today.getSeconds() < 10)?"0":"")+today.getSeconds();
+
+    let channel_id=this.state.room
+    let message=this.state.input
+    // posting message to my db
+    axios.post('/api/message', {message,message_time,channel_id}).then(res=>{
+         this.socket.emit('message sent', {
+      message: this.state.input,
+      room: this.state.room
+    }) 
+ })     
+}
+openWindow(){
+
+  this.state.emoji?this.setState({emoji:false}):this.setState({emoji:true})
+}
+addEmoji(emo){
+var input=this.state.input.split('<span>').join('').split('</span>').join('')
+ input=`<span>${input}<img src=${emo} class="emoji" data-codepoints="1f605" height="20px" width="20px" /></span>`;
+  
+  
+  this.setState({input})
+
+
+}
+
+
+
   render() {
-    console.log("MY USER IS===>",this.props.user, this.props.users, this.props.channels)
-    let {user, users, channels}=this.props;
+    //creating message list by mapping thru messages
+    let messages=this.state.messages.map((message,i)=>{
+      return (<div key={i}><img src={message.profile_picture} alt=""/> <p> {message.message_time} {message.battle_tag} {message.mmr}:
+       <ContentEditable
+              html={message.message} 
+              disabled={true}/></p>
+      <button onClick={()=>{
+        let action="like"
+        let number=message.like+1;
+        let{user_id, message_time}=message;
+        let channel_id=this.props.id
+        axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
 
-    //finding only channels with this player that not tier rooms    
-    let channelList=channels.filter(e=>e.id>6&&e.allowed_users.includes(user.id))
-    .map((channel, i)=>{
-      console.log("MAIN USER ID---->",user.id)
-      var usersNum=channel.allowed_users.filter(number=>number!=user.id);
-      console.log("usersNum is!",usersNum)
-      var usersNames=users.filter(user=> usersNum.includes(user.id)).map(user=><p>{user.battle_tag}</p>);
-      return (<div key={i}> <p>Chat with:</p> <Link to={`/reload/${channel.id}`}><button >{usersNames}</button></Link></div>)
+          this.socket.emit('message sent', {
+            message: this.state.input,
+            room: this.state.room
+          }) 
+        })
+      }}><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/114472-200.png" alt="fire" height="20px" width="20px"/>
+      </button>{message.like}<button onClick={()=>{
+        let action="dislike"
+        let number=message.dislike+1;
+        let{user_id, message_time}=message;
+        let channel_id=this.props.id
+        axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
+
+          this.socket.emit('message sent', {
+            message: this.state.input,
+            room: this.state.room
+          })
+        })
+      }}><img src="https://cdn0.iconfinder.com/data/icons/thin-voting-awards/24/thin-0664_dislike_thumb_down_vote-512.png" alt="fire" height="20px" width="20px"/>
+      </button>{message.dislike}</div>)
     })
+
+    
+
     return (
-      <div className="Channels">
-      <p> CHAT LIST </p>
-        {this.state.filteredChats.length>0?
-        this.state.filteredChats:
-          
-          
-          channelList} 
+      <div className="App">
+     <h1>My Room: {this.state.room}</h1> 
+       
+        {
+            <div>
+                <h2> {messages}</h2>
+                {/* writing new message */}
 
-      <p> Search by battleTag</p>
-
-      <input value={this.state.search} onChange={e=>{
-        this.setState({search:e.target.value})}}/>
-      <button onClick={this.searchRoom}>Search</button>
-
-      <button onClick={()=>{this.setState({filteredChats:[]})}}>Show all</button>
+              <ContentEditable
+              html={this.state.input} // innerHTML of the editable div
+              disabled={false}       // use true to disable edition
+              onChange={this.handleChange=(e)=>{this.setState({input:e.target.value})}} // handle innerHTML change
+            />
+              
+              <button onClick={this.openWindow}>emoji</button>
+                {/* Checking if somebody press emoji button and open menu */}
+              {this.state.emoji?
+                <MyEmojiInput2 addEmoji={this.addEmoji}/>:
+                <p></p>
+              }
+              
+              <button onClick={this.sendMessage}>Send</button>
+           
+            </div>
+      
+        }
       </div>
     );
   }
 }
 
 function mapStateToProps(state){
-  return {
-    user:state.user,
-    users:state.users,
-    channels:state.channels
-  }
+  return state
 }
-export default connect(mapStateToProps)(withRouter(Channels)) ;
+export default connect(mapStateToProps)(Privatemessages) ;

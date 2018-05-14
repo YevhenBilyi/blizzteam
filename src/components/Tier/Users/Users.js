@@ -17,7 +17,7 @@ class Users extends Component {
     console.log("MY CHANNELS!!!",this.props.channels)
     let {channels, users, user}=this.props;
     //filtering users that are in this tier and yourself
-    let userList=users.filter(e=>e.tier==this.state.tier&&e.id!=user.id).map((e,i)=>{
+    let userList=users.filter(e=>e.tier===this.state.tier&&e.id!==user.id).map((e,i)=>{
       let counter=0;
       let link=<button key={i} onClick={()=>{
       //mapping thru the channels and looking for channel that have you and chosen user
@@ -41,7 +41,7 @@ class Users extends Component {
       } 
       }}
       
-      >  {e.battle_tag} {e.mmr} {e.online? <p>online</p>: <p>offline</p>}  </button> 
+      >  {e.battle_tag} {e.mmr==0?<p></p>:e.mmr} {e.online? <p>online</p>: <p>offline</p>}  </button> 
 
 
  
@@ -51,6 +51,8 @@ class Users extends Component {
   })
     return (
       <div className="Users">
+      <img src={this.props.tierIMG} alt=""/>
+      <p style={{margin:" 20px 0"}}><i class="arrow down"></i> Click to chat <i class="arrow down"></i> </p>
         {userList}
       </div>
     );

@@ -1,0 +1,204 @@
+#tierchat{
+    height: 70vh;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    overflow: scroll;
+    margin-top: 30px;
+}
+.contentSuka{
+    width: 319px;
+    max-width: 324px;
+}
+.wholemessage{
+    border: 2px solid; /* whichever color you prefer */
+    border-image: linear-gradient(to right,#295fcc,#7a7acc) 100% 2;
+    width: 370px;
+    display: flex;
+    align-items: flex-start;
+    background: url("../../../img/nav-top-pattern.png"),rgba(0,0,0,0);
+    letter-spacing: 2px;
+}
+.insidemessage{
+    display: flex;
+    flex-flow: column;
+}
+.userinfo{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    margin-bottom: 5px;
+    
+}
+.mainmain img{
+    height: 40px;
+    border-radius: 90%;
+    padding-left: 5px;
+}
+.like img{
+   background-color:  #7a7acc;
+   border-radius: 90%;
+}
+.like{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 2px;
+}
+.Tiermessages h1{
+    margin: 10px;
+    color: #fff;
+    text-shadow:0 0 6px #99f;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.contenteditable{
+    min-width: 90%;
+max-width: 90%;
+background-image: linear-gradient(to right,#039,#309)!important;
+border: 1px solid #260d54;
+color: #ccf;
+font-family: Helvetica, Arial, sans-serif;
+text-shadow:0 0 6px #99f;
+clear: both;
+overflow: hidden;
+min-height: 25px;
+max-height: 50px;
+}
+.inputline{
+    width: 90%;
+    display: flex;
+    flex-flow: row;
+    align-content: flex-start;
+    justify-content: center;
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.sendbutton button{
+    
+    cursor: pointer;
+    background: linear-gradient(to bottom,#ff9f19,#ff6619);
+    
+    height: 25px;
+    width: 48px;
+    display: block;
+    color: #fff;
+    z-index: 10;
+    text-shadow: 0 1px 4px rgba(0,0,51,.4);
+    transition: color .2s;
+    padding: 2px;
+    border: #fca52c 2px solid;
+}
+.sendbutton button:hover{
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);
+}
+.inputline input{
+    margin-left: 15px;
+width: 200px;
+background-image: linear-gradient(to right,#039,#309)!important;
+border: 1px solid #260d54;
+color: #ccf;
+font-family: Helvetica, Arial, sans-serif;
+clear: both;
+overflow: hidden;
+white-space: nowrap;
+height: 25px;
+font-size: 15px;
+}
+#filterbutton button{
+    margin: 0 10px;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #490095, #030099);
+    height: 29px;
+    width: 60px;
+    display: block;
+    color: #fff;
+    z-index: 10;
+    text-shadow: 0 1px 4px rgba(0,0,51,.4);
+    transition: color .2s;
+    padding: 2px;
+    border: #6a2cfc 2px solid;
+}
+#filterbutton button:hover{
+    background: linear-gradient(to bottom, #5e00c5, #0500cc);
+}
+#resetbutton button{
+    margin: 0 10px;
+    cursor: pointer;
+    background: linear-gradient(to bottom,#ff9f19,#ff6619);  
+    
+    height: 29px;
+    width: 60px;
+    display: block;
+    color: #fff;
+    z-index: 10;
+    text-shadow: 0 1px 4px rgba(0,0,51,.4);
+    transition: color .2s;
+    padding: 2px;
+    border: #fca52c 2px solid;
+}
+#resetbutton button:hover{
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);
+}
+.imgbutton button{
+    background: transparent;
+    border: none;
+}
+.imgbutton button:hover{
+    outline: none;
+    cursor: pointer;
+}
+#emojipicker{
+    position: absolute;
+    bottom: 5rem;
+}
+@media(min-width:601px){
+    #tierchat{
+        height: 70vh;
+    }
+    .wholemessage{
+        width: 60vw;
+        margin-left: 10px;
+        border: 3px solid #7a7acc; /* whichever color you prefer */
+        overflow: scroll;
+    }
+    .mainmain img{
+        height: 50px;
+    }
+.inputline{
+    width: 84%;
+    justify-content: flex-start;
+}
+    .sendbutton button{
+        width: 70px;
+    }
+   .inputline input{
+       margin-left: 0;
+       width: 25%;
+   }
+   #filterbutton button{
+       width: 105px;
+       
+   }
+   .sendbutton button{
+       width: 80px;
+   }
+   #resetbutton button{
+       width: 105px;
+   }
+   .contentSuka{
+    width: 719px;
+    max-width: 724px;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 30px;
+    word-wrap: break-word;
+}
+.like{
+    justify-content: flex-end;
+}
+#emojipicker{
+    bottom: 8rem;
+    left: 30rem;
+}
+}

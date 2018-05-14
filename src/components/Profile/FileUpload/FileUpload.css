@@ -1,0 +1,28 @@
+#FileUpload button{
+    background: linear-gradient(to bottom, #490095, #030099);
+    border:#853bcf  2px solid;
+    height: 27px;
+    width: 201px;
+    display: block;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,51,.4);
+    transition: color .2s;
+    
+    margin: auto;
+    margin-top: 10px;
+    box-shadow: 1px 0 4px rgba(102, 48, 20, 0.24), 6px 0 24px rgba(0, 0, 0, 0.36);
+}
+#FileUpload button:hover{
+    background: linear-gradient(to bottom, #5e00c5, #0500cc);
+}
+@media(min-width:601px){
+    #FileUpload button{
+        height: 47px;
+        width: 357px;
+        font-size: 24px;
+        letter-spacing: 5px;
+    }
+    #FileUpload input{
+        font-size: 12px;
+    }
+}

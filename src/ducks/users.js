@@ -42,10 +42,13 @@ export function getAllUsers(){
 }
 
 export function updateUser(battleTag, server, mmr, tier,hero){
-    axios.put('/api/user',{battleTag, server, mmr, tier,hero})
+    console.log("controller bT",battleTag)
+    let user=axios.put('/api/user',{battleTag, server, mmr, tier,hero}).then(res=>{
+        return res.data
+    })
             return {
         type:UPDATE_USER,
-        payload:initialState.user 
+        payload:user
     }
 }
 
@@ -73,7 +76,8 @@ export default function reducer(state=initialState, action){
         return Object.assign({}, state, {user:action.payload})
 
         case UPDATE_USER+'_FULFILLED':
-        return Object.assign({}, state, {user:action.payload})
+        console.log(action.payload)
+        return Object.assign({}, state, {user:action.payload[0]})
 
         case UPDATE_ALL_DATA+'_FULFILLED':
         return Object.assign({},state, {allData:action.payload})

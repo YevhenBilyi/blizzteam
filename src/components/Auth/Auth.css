@@ -1,0 +1,71 @@
+
+.unauthorized{
+    background:url("../../img/authpage.png")center,no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    text-shadow:0 0 6px #99f;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#login button{
+    height: 47px;
+    width: 401px;
+    transition: all 500ms ease;
+    transition-property: all;
+    transition-duration: 500ms;
+    transition-timing-function: ease;
+    transition-delay: initial;
+    background: linear-gradient(to bottom, #ff9f19, #ff6619);
+    color: white;
+    border: #fca52c 2px solid;
+    text-shadow: 0 1px 4px rgba(0, 0, 51, 0.4);
+    font-size: 20px;
+    font-weight: 600;
+    transition: all 500ms ease;
+    text-align: center;
+    font-size: .8888rem;
+
+}
+#login button:focus{
+   outline:0;
+}
+#logo{
+    padding-top: 30px;
+    height: 50%;
+}
+#logo h1{
+    font-size: 80px;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 12px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8), 0 6px 24px rgba(0, 0, 0, .6);
+    font-family: 'Anton', sans-serif;
+}
+#logo p{
+    margin-top: 20px;
+    color: #ccf;
+    letter-spacing: 3px;
+}
+#footer{
+    padding-top: 20px;
+    bottom:0;
+    color: white;
+    letter-spacing: 3px;
+}
+@media(max-width:390px){
+    #logo h1{
+        font-size: 50px;
+    }
+    #login button{
+        width: 301px;
+    }
+    #logo p{
+        padding-right: 18px;
+        padding-left:18px;
+        line-height: 30px;
+    }
+}

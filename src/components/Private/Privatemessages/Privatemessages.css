@@ -1,0 +1,46 @@
+.wholeprivatemessage{
+    height: 70vh;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    overflow: scroll;
+    margin-top: 30px;
+}
+#emojipicker2{
+    position: absolute;
+    bottom: 3rem;
+    left: 0rem;
+}
+#wholeprivate button:hover{
+    background: transparent;
+}
+#buttonsend button:hover{
+    background: linear-gradient(to bottom,#ffb252,#ff8c52);
+}
+.imgbutton button:hover{
+    background: transparent;
+}
+@media(min-width:601px){
+    .privatemessages{
+        margin-top: 20px;
+        margin-left: 60px;
+    }
+#wholeprivate{
+    width: 70vw;
+}
+
+
+#contenteditable{
+    max-width: 671px;
+    margin-left: 10px;
+    height: 27px;
+}
+#buttonsend button{
+    height: 27px;
+    width: 201px;
+}
+#emojipicker2{
+    bottom: 6rem;
+    left: 52rem;
+}
+}

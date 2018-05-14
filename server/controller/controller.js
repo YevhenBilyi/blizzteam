@@ -5,7 +5,7 @@ module.exports={
         const{ server, battleTag, mmr, tier,hero}=req.body
         console.log("MY IDDDDD IS", req.user.id)
         db.update_user([server,battleTag, mmr, tier, hero, req.user.id])
-        .then(()=>res.status(200).send())
+        .then(user=>res.status(200).send(user))
         .catch(err=>res.status(500).send(err))
     },
     //getting all data on session id user
@@ -22,7 +22,7 @@ module.exports={
         
         console.log("ID IS", req.user.id)
         db.store_message([req.user.id,message,message_time,channel_id])
-        .then(()=>res.status(200).send())
+        .then((messages)=>res.status(200).send(messages))
         .catch(err=>res.status(500).send(err))
     },
     //getting all the messages by the tier number
