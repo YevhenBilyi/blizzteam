@@ -32,7 +32,7 @@
 #tiermessages{
     display: block;
     width: 100%;
-    height: 93%;
+    height: 91%;
 }
 @media(min-width:601px){
     #messagesusers button{

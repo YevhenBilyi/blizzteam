@@ -19,13 +19,16 @@
     background: url("../../../img/nav-top-pattern.png"),rgba(0,0,0,0);
     letter-spacing: 2px;
 }
+.myOwnMessage{
+    flex-flow: row-reverse;
+}
 .insidemessage{
     display: flex;
     flex-flow: column;
+    width: 100%;
 }
 .userinfo{
     display: flex;
-    flex-flow: row;
     justify-content: space-around;
     margin-bottom: 5px;
     
@@ -187,8 +190,8 @@ font-size: 15px;
        width: 105px;
    }
    .contentSuka{
-    width: 719px;
-    max-width: 724px;
+    width: 90%;
+    max-width: 90%;
     display: flex;
     justify-content: flex-start;
     padding-left: 30px;

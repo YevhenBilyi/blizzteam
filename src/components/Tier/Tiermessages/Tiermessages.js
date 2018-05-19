@@ -61,13 +61,9 @@ class Tiermessages extends Component {
   }
   updateMessage(message) {
       this.setState({
-    messages: message,
+    messages: [...this.state.messages, message],
     input:''})
-    setTimeout(this.scrollToBottom, 1000)
-
-
-  
-
+    this.scrollToBottom()
   }
   sendMessage() {
 
@@ -76,10 +72,14 @@ class Tiermessages extends Component {
     var message_time = ((today.getHours() < 10)?"0":"") +today.getHours()+ ":" + ((today.getMinutes() < 10)?"0":"")+today.getMinutes() + ":" + ((today.getSeconds() < 10)?"0":"")+today.getSeconds();
     let channel_id=this.state.channel_id
     let message=this.state.input
+    let like=0;
+    let dislike=0;
+    let{id, google_id, server_num, battle_tag, profile_picture, mmr, tier, hero, online}=this.props.user;
+    let user_id=id;
     // posting message to my db
     axios.post('/api/message', {message,message_time,channel_id}).then(res=>{
          this.socket.emit('message sent', {
-      message: res.data,
+      message: {message, message_time, channel_id, id, google_id, server_num, battle_tag, profile_picture, mmr, tier, hero, online,user_id, like, dislike },
       room: this.state.room
     }) 
  })     
@@ -119,39 +119,40 @@ scrollToBottom() {
 }
 
   render() {
-    var style2={  height:"100%",wordWrap:"break-word",padding:"3px"}
+    var style2={  height:"100%",wordWrap:"break-word",padding:"3px"};
+
     //creating message list by mapping thru messages
     let messages=this.state.messages.map((message,i)=>{
-    return (<div className="wholewhole"key={i}><div className="wholemessage"  ><div className="mainmain"><img src={message.hero} alt=""/></div> <div className="insidemessage">
-    <div className="userinfo"> {message.mmr===0?'':message.mmr}  {message.battle_tag} {message.message_time} </div>
-    <div className="contentSuka"><ContentEditable style={style2}
+      var myOwnMessage=this.props.user.id==message.id?'myOwnMessage':'';
+      var likeReverse=this.props.user.id==message.id?{justifyContent:'flex-start'}:{justifyContent:'flex-end'};
+      var textReverse=this.props.user.id==message.id?{justifyContent:'flex-end'}:{justifyContent:'flex-start'};
+    return (<div className="wholewhole"key={i}><div className={`wholemessage ${myOwnMessage}` }   >
+    <div className="mainmain"><img src={message.hero} alt=""/></div> <div className="insidemessage">
+    <div className="userinfo">  {message.battle_tag} {message.message_time}{message.mmr===0?'':' MMR:'+message.mmr}  </div>
+    <div className="contentSuka"style={textReverse}><ContentEditable style={style2}
     html={message.message} 
-    disabled={true}/></div>{/*LIKE BUTTON*/}<div className="like imgbutton"><button onClick={()=>{
+    disabled={true}/></div>{/*LIKE BUTTON*/}<div className="like imgbutton" style={likeReverse}><button onClick={()=>{
         let action="like"
         let number=message.like+1;
         let{user_id, message_time}=message;
-        let channel_id=this.state.channel_id
-        axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
-
-          this.socket.emit('message sent', {
-            message: res.data,
-            room: this.state.room
-          }) 
-        })
+        let channel_id=this.state.channel_id;
+        let newArr=this.state.messages.map(m=>{
+          m.user_id==user_id&& m.message_time==message_time? m.like++: m.like;
+          return m})
+          this.setState({messages:newArr})
+        axios.put('/api/like',{action,number,user_id,message_time,channel_id} )
       
       }}><img src={thumbup} alt="thumbup" height="20px" width="20px"/>
       </button>{message.like} {/*DISLIKE BUTTON*/}<button onClick={()=>{
-        let action="dislike"
+        let action="dislike";
         let number=message.dislike+1;
         let{user_id, message_time}=message;
-        let channel_id=this.state.channel_id
-        axios.put('/api/like',{action,number,user_id,message_time,channel_id} ).then(res=>{
-
-          this.socket.emit('message sent', {
-            message: res.data,
-            room: this.state.room
-          })
-        })
+        let channel_id=this.state.channel_id;
+        let newArr=this.state.messages.map(m=>{
+          m.user_id==user_id&& m.message_time==message_time? m.dislike++: m.dislike;
+          return m})
+          this.setState({messages:newArr})
+        axios.put('/api/like',{action,number,user_id,message_time,channel_id})
       }}><img src={thumbdown} alt="thumbdown" height="20px" width="20px"/>
       </button>{message.dislike}</div></div></div></div>)
     })
