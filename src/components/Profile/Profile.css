@@ -92,6 +92,18 @@ select:hover{
 #update input:focus{
     outline: none;
 }
+@media(max-height:650px){
+    .Profile{
+        height: 100%;
+    }
+    #battleTag{
+    font-size: 12px
+    }
+    #second img{
+        padding:0
+    }
+
+}
 @media(min-width:601px){
 
     .Profile{

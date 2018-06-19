@@ -31,6 +31,11 @@
     outline: none;
     background: linear-gradient(to bottom, #5e00c5, #0500cc);
 }
+@media(max-height:650px){
+    .Private{
+        height: 100%;
+    }
+}
 @media(min-width:601px){
 #switchbuttons {
     display: none;
